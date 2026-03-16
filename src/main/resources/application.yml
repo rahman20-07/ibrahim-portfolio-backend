@@ -1,0 +1,77 @@
+spring:
+  application:
+    name: portfolio-api
+
+  # ── Database ──────────────────────────────────────────────────────
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/portfolio_db}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+
+  # ── JPA ───────────────────────────────────────────────────────────
+  jpa:
+    hibernate:
+      ddl-auto: validate          # Flyway handles schema — JPA only validates
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        default_schema: public
+
+  # ── Flyway migrations ────────────────────────────────────────────
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+  # ── Mail (contact form) ───────────────────────────────────────────
+  mail:
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME:your@gmail.com}
+    password: ${MAIL_PASSWORD:app-password}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+# ── Server ─────────────────────────────────────────────────────────
+server:
+  port: ${PORT:8080}
+  error:
+    include-message: always
+    include-binding-errors: always
+
+# ── Actuator (health check for Render/AWS) ────────────────────────
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: when-authorized
+
+# ── App config ────────────────────────────────────────────────────
+app:
+  cors:
+    allowed-origins: ${CORS_ORIGINS:http://localhost:3000,https://ibrahim.dev}
+  contact:
+    recipient-email: ${CONTACT_EMAIL:ibrahim@email.com}
+
+# ── Logging ───────────────────────────────────────────────────────
+logging:
+  level:
+    dev.ibrahim.portfolio: INFO
+    org.springframework.web: WARN
+    org.hibernate.SQL: WARN

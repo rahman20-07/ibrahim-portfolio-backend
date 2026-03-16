@@ -1,0 +1,24 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=PostgreSQL
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+
+  flyway:
+    enabled: false   # Let JPA create schema for tests
+
+  mail:
+    host: localhost
+    port: 25
+
+app:
+  cors:
+    allowed-origins: http://localhost:3000
+  contact:
+    recipient-email: test@test.com
